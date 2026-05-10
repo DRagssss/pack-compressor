@@ -6,7 +6,11 @@ from os import mkdir
 mkdir("packs/compressed-edit")
 
 with ZipFile("packs/base.zip", "r") as base_zip:
-    base_files: list[str] = base_zip.namelist()
+    base_files = [
+        info.filename
+        for info in base_zip.infolist()
+        if not info.is_dir()
+    ]
 
     with ZipFile("packs/edit.zip", "r") as edit_zip:
         for file_name in base_files:
