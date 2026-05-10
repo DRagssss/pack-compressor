@@ -20,6 +20,8 @@ try:
             edit_only_files = set(edit_files) - set(base_files)
 
             for file_name in common_files:
+                if any(blocked in file_name for blocked in ["pack.mcmeta"]):
+                    continue
                 with base_zip.open(file_name) as base_content:
                     with edit_zip.open(file_name) as edit_content:
                         if edit_content.read() != base_content.read():
