@@ -6,14 +6,16 @@ from os import mkdir
 mkdir("packs/compressed-edit")
 
 with ZipFile("packs/base.zip", "r") as base_zip:
-    base_files = [
-        info.filename
-        for info in base_zip.infolist()
-        if not info.is_dir()
-    ]
+    base_files = [info.filename for info in base_zip.infolist() if not info.is_dir()]
 
     with ZipFile("packs/edit.zip", "r") as edit_zip:
-        for file_name in base_files:
+        edit_files = [
+            info.filename for info in edit_zip.infolist() if not info.is_dir()
+        ]
+
+        common_files = list(set(base_files) & set(edit_files))
+
+        for file_name in common_files:
             with base_zip.open(file_name) as base_content:
                 with edit_zip.open(file_name) as edit_content:
                     if edit_content != base_content:
