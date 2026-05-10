@@ -22,6 +22,9 @@ try:
                 with base_zip.open(file_name) as base_content:
                     with edit_zip.open(file_name) as edit_content:
                         if edit_content != base_content:
+                            Path(f"packs/compressed-edit/{file_name}").parent.mkdir(
+                                parents=True, exist_ok=True
+                            )
                             with open(f"packs/compressed-edit/{file_name}", "wb") as f:
                                 f.write(edit_content.read())
                         else:
