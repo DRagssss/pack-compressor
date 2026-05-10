@@ -1,5 +1,6 @@
 # Project specific
 packs/
+!packs/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
