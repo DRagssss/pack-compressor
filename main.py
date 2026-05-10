@@ -16,19 +16,27 @@ try:
                 info.filename for info in edit_zip.infolist() if not info.is_dir()
             ]
 
-            common_files = list(set(base_files) & set(edit_files))
+            common_files = set(base_files) & set(edit_files)
+            edit_only_files = set(edit_files) - set(base_files)
 
             for file_name in common_files:
                 with base_zip.open(file_name) as base_content:
                     with edit_zip.open(file_name) as edit_content:
-                        if edit_content != base_content:
+                        if edit_content.read() != base_content.read():
                             Path(f"packs/compressed-edit/{file_name}").parent.mkdir(
                                 parents=True, exist_ok=True
                             )
                             with open(f"packs/compressed-edit/{file_name}", "wb") as f:
-                                f.write(edit_content.read())
+                                f.write(edit_zip.read(file_name))
                         else:
                             print(f"Detected copy file: `{file_name}`")
+
+            for file_name in edit_only_files:
+                Path(f"packs/compressed-edit/{file_name}").parent.mkdir(
+                    parents=True, exist_ok=True
+                )
+                with open(f"packs/compressed-edit/{file_name}", "wb") as f:
+                    f.write(edit_zip.read(file_name))
 
     files = []
 
